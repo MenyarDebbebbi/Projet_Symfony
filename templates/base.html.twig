@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Gestion Ouvriers{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
         {% block stylesheets %}
         {% endblock %}
 
@@ -11,7 +13,29 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="bg-gray-50 min-h-screen">
+        <nav class="bg-indigo-600 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="{{ path('app_ouvrier_index') }}" class="text-xl font-bold">
+                            Gestion des Ouvriers
+                        </a>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ path('app_ouvrier_index') }}" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition">
+                            Liste
+                        </a>
+                        <a href="{{ path('app_ouvrier_new') }}" class="bg-indigo-500 hover:bg-indigo-400 px-4 py-2 rounded-md transition font-medium">
+                            + Nouveau
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>

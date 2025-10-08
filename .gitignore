@@ -13,7 +13,7 @@
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
-
+/.node_modules/
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/

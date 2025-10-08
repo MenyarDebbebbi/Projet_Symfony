@@ -1,38 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ouvrier{% endblock %}
+{% block title %}Détails Ouvrier{% endblock %}
 
 {% block body %}
-    <h1>Ouvrier</h1>
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Détails de l'ouvrier</h1>
+                <p class="mt-2 text-gray-600">Informations complètes de l'ouvrier</p>
+            </div>
+            <a href="{{ path('app_ouvrier_index') }}" class="text-indigo-600 hover:text-indigo-900 flex items-center transition">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour à la liste
+            </a>
+        </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ouvrier.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ ouvrier.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ ouvrier.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Mail</th>
-                <td>{{ ouvrier.mail }}</td>
-            </tr>
-            <tr>
-                <th>Grade</th>
-                <td>{{ ouvrier.grade }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-500 to-indigo-600">
+                <h3 class="text-lg leading-6 font-medium text-white">
+                    {{ ouvrier.nom }} {{ ouvrier.prenom }}
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-indigo-100">
+                    Informations personnelles et professionnelles
+                </p>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-800">
+                                #{{ ouvrier.id }}
+                            </span>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Nom</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">
+                            {{ ouvrier.nom }}
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Prénom</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">
+                            {{ ouvrier.prenom }}
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Email</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <a href="mailto:{{ ouvrier.mail }}" class="text-indigo-600 hover:text-indigo-900 transition">
+                                {{ ouvrier.mail }}
+                            </a>
+                        </dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Grade</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                {{ ouvrier.grade }}
+                            </span>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
 
-    <a href="{{ path('app_ouvrier_index') }}">back to list</a>
-
-    <a href="{{ path('app_ouvrier_edit', {'id': ouvrier.id}) }}">edit</a>
-
-    {{ include('ouvrier/_delete_form.html.twig') }}
+        <div class="mt-6 flex items-center justify-between">
+            <div>
+                {{ include('ouvrier/_delete_form.html.twig') }}
+            </div>
+            <a href="{{ path('app_ouvrier_edit', {'id': ouvrier.id}) }}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Modifier
+            </a>
+        </div>
+    </div>
 {% endblock %}
