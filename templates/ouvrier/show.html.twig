@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ouvrier{% endblock %}
+
+{% block body %}
+    <h1>Ouvrier</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ouvrier.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ ouvrier.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ ouvrier.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Mail</th>
+                <td>{{ ouvrier.mail }}</td>
+            </tr>
+            <tr>
+                <th>Grade</th>
+                <td>{{ ouvrier.grade }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ouvrier_index') }}">back to list</a>
+
+    <a href="{{ path('app_ouvrier_edit', {'id': ouvrier.id}) }}">edit</a>
+
+    {{ include('ouvrier/_delete_form.html.twig') }}
+{% endblock %}

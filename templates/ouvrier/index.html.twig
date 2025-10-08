@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ouvrier index{% endblock %}
+
+{% block body %}
+    <h1>Ouvrier index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Mail</th>
+                <th>Grade</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ouvrier in ouvriers %}
+            <tr>
+                <td>{{ ouvrier.id }}</td>
+                <td>{{ ouvrier.nom }}</td>
+                <td>{{ ouvrier.prenom }}</td>
+                <td>{{ ouvrier.mail }}</td>
+                <td>{{ ouvrier.grade }}</td>
+                <td>
+                    <a href="{{ path('app_ouvrier_show', {'id': ouvrier.id}) }}">show</a>
+                    <a href="{{ path('app_ouvrier_edit', {'id': ouvrier.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ouvrier_new') }}">Create new</a>
+{% endblock %}
