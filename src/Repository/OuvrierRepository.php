@@ -16,28 +16,30 @@ class OuvrierRepository extends ServiceEntityRepository
         parent::__construct($registry, Ouvrier::class);
     }
 
-//    /**
-//     * @return Ouvrier[] Returns an array of Ouvrier objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('o.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findBySearchCriteria(?string $searchTerm = null, ?string $searchType = 'all'): array
+    {
+        $qb = $this->createQueryBuilder('o');
 
-//    public function findOneBySomeField($value): ?Ouvrier
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($searchTerm) {
+            switch ($searchType) {
+                case 'nom':
+                    $qb->andWhere('o.nom LIKE :searchTerm')
+                        ->setParameter('searchTerm', '%' . $searchTerm . '%');
+                    break;
+                case 'grade':
+                    $qb->andWhere('o.grade LIKE :searchTerm')
+                        ->setParameter('searchTerm', '%' . $searchTerm . '%');
+                    break;
+                case 'all':
+                default:
+                    $qb->andWhere('o.nom LIKE :searchTerm OR o.prenom LIKE :searchTerm OR o.grade LIKE :searchTerm')
+                        ->setParameter('searchTerm', '%' . $searchTerm . '%');
+                    break;
+            }
+        }
+
+        return $qb->orderBy('o.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

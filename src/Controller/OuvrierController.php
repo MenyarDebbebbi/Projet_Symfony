@@ -15,10 +15,21 @@ use Symfony\Component\Routing\Attribute\Route;
 final class OuvrierController extends AbstractController
 {
     #[Route(name: 'app_ouvrier_index', methods: ['GET'])]
-    public function index(OuvrierRepository $ouvrierRepository): Response
+    public function index(Request $request, OuvrierRepository $ouvrierRepository): Response
     {
+        $searchTerm = $request->query->get('search', '');
+        $searchType = $request->query->get('type', 'all');
+
+        if ($searchTerm) {
+            $ouvriers = $ouvrierRepository->findBySearchCriteria($searchTerm, $searchType);
+        } else {
+            $ouvriers = $ouvrierRepository->findAll();
+        }
+
         return $this->render('ouvrier/index.html.twig', [
-            'ouvriers' => $ouvrierRepository->findAll(),
+            'ouvriers' => $ouvriers,
+            'searchTerm' => $searchTerm,
+            'searchType' => $searchType,
         ]);
     }
 
