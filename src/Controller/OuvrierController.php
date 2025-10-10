@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/ouvrier')]
 final class OuvrierController extends AbstractController
 {
+
+
     #[Route(name: 'app_ouvrier_index', methods: ['GET'])]
     public function index(Request $request, OuvrierRepository $ouvrierRepository): Response
     {
@@ -32,6 +34,13 @@ final class OuvrierController extends AbstractController
             'searchType' => $searchType,
         ]);
     }
+    #[Route('/calculer/{x}/{y}', name: 'app_ouvrier_calculer', methods: ['GET'])]
+    public function calculer($x = 5,   $y = 0): Response
+    {
+        $resultat = $x + $y;
+        return new Response("Le résultat de {$x} + {$y} = {$resultat}");
+    }
+
 
     #[Route('/new', name: 'app_ouvrier_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -82,7 +91,7 @@ final class OuvrierController extends AbstractController
     #[Route('/{id}', name: 'app_ouvrier_delete', methods: ['POST'])]
     public function delete(Request $request, Ouvrier $ouvrier, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$ouvrier->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $ouvrier->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($ouvrier);
             $entityManager->flush();
         }
