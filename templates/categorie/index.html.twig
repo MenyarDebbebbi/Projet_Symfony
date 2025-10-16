@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Catégories{% endblock %}
+
+{% block body %}
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Liste des Catégories</h1>
+        <p class="mt-2 text-gray-600">Gérez toutes vos catégories en un seul endroit</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Rechercher une catégorie
+        </h2>
+        
+        <form method="get" action="{{ path('app_categorie_index') }}" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <label for="search" class="sr-only">Recherche</label>
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search" 
+                    value="{{ searchTerm }}"
+                    placeholder="Rechercher par désignation..."
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2 border"
+                >
+            </div>
+            
+            <div class="flex gap-2">
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Rechercher
+                </button>
+                
+                {% if searchTerm %}
+                <a 
+                    href="{{ path('app_categorie_index') }}"
+                    class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                    Réinitialiser
+                </a>
+                {% endif %}
+            </div>
+        </form>
+
+        {% if searchTerm %}
+        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p class="text-sm text-blue-800">
+                <span class="font-semibold">Recherche active :</span> 
+                "{{ searchTerm }}" - {{ categories|length }} résultat(s) trouvé(s)
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            ID
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Désignation
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for categorie in categories %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ categorie.id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ categorie.designation }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ path('app_categorie_show', {'id': categorie.id}) }}" 
+                               class="text-indigo-600 hover:text-indigo-900 mr-3 transition">
+                                Voir
+                            </a>
+                            <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}" 
+                               class="text-yellow-600 hover:text-yellow-900 transition">
+                                Modifier
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="px-6 py-12 text-center">
+                            <div class="text-gray-500">
+                                {% if searchTerm %}
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium">Aucun résultat trouvé</p>
+                                    <p class="mt-1 text-xs">Essayez avec d'autres critères de recherche</p>
+                                    <a href="{{ path('app_categorie_index') }}" 
+                                       class="mt-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition">
+                                        Voir toutes les catégories
+                                    </a>
+                                {% else %}
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium">Aucune catégorie trouvée</p>
+                                    <p class="mt-1 text-xs">Commencez par créer une nouvelle catégorie</p>
+                                    <a href="{{ path('app_categorie_new') }}" 
+                                       class="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition">
+                                        Créer une catégorie
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if categories|length > 0 %}
+    <div class="mt-6 flex justify-between items-center">
+        <p class="text-sm text-gray-700">
+            Total : <span class="font-medium">{{ categories|length }}</span> catégorie(s)
+        </p>
+        <a href="{{ path('app_categorie_new') }}" 
+           class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition">
+            Créer une catégorie
+        </a>
+    </div>
+    {% endif %}
+{% endblock %}
+

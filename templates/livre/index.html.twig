@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Livres{% endblock %}
+
+{% block body %}
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Liste des Livres</h1>
+        <p class="mt-2 text-gray-600">Gérez tous vos livres en un seul endroit</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Rechercher un livre
+        </h2>
+        
+        <form method="get" action="{{ path('app_livre_index') }}" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <label for="search" class="sr-only">Recherche</label>
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search" 
+                    value="{{ searchTerm }}"
+                    placeholder="Rechercher par titre ou priorité..."
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2 border"
+                >
+            </div>
+            
+            <div class="w-full md:w-48">
+                <label for="type" class="sr-only">Type de recherche</label>
+                <select 
+                    id="type" 
+                    name="type"
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2 border"
+                >
+                    <option value="all" {{ searchType == 'all' ? 'selected' : '' }}>Tous les champs</option>
+                    <option value="titre" {{ searchType == 'titre' ? 'selected' : '' }}>Titre uniquement</option>
+                    <option value="priorite" {{ searchType == 'priorite' ? 'selected' : '' }}>Priorité uniquement</option>
+                </select>
+            </div>
+            
+            <div class="flex gap-2">
+                <button 
+                    type="submit"
+                    class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Rechercher
+                </button>
+                
+                {% if searchTerm %}
+                <a 
+                    href="{{ path('app_livre_index') }}"
+                    class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                    Réinitialiser
+                </a>
+                {% endif %}
+            </div>
+        </form>
+
+        {% if searchTerm %}
+        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p class="text-sm text-blue-800">
+                <span class="font-semibold">Recherche active :</span> 
+                "{{ searchTerm }}" 
+                {% if searchType == 'titre' %}
+                    dans le <span class="font-medium">titre</span>
+                {% elseif searchType == 'priorite' %}
+                    dans la <span class="font-medium">priorité</span>
+                {% else %}
+                    dans <span class="font-medium">tous les champs</span>
+                {% endif %}
+                - {{ livres|length }} résultat(s) trouvé(s)
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            ID
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Titre
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            ISBN
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quantité
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Priorité
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date de publication
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {% for livre in livres %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ livre.id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ livre.titre }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-500">{{ livre.isbn ?? '-' }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ livre.qte }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                {% if livre.priorite == 'Haute' %}
+                                    bg-red-100 text-red-800
+                                {% elseif livre.priorite == 'Moyenne' %}
+                                    bg-yellow-100 text-yellow-800
+                                {% else %}
+                                    bg-green-100 text-green-800
+                                {% endif %}">
+                                {{ livre.priorite }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500>
+                        {{livre.isbn}}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ livre.datepub|date('d/m/Y') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ path('app_livre_show', {'id': livre.id}) }}" 
+                               class="text-indigo-600 hover:text-indigo-900 mr-3 transition">
+                                Voir
+                            </a>
+                            <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" 
+                               class="text-yellow-600 hover:text-yellow-900 transition">
+                                Modifier
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <div class="text-gray-500">
+                                {% if searchTerm %}
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium">Aucun résultat trouvé</p>
+                                    <p class="mt-1 text-xs">Essayez avec d'autres critères de recherche</p>
+                                    <a href="{{ path('app_livre_index') }}" 
+                                       class="mt-4 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition">
+                                        Voir tous les livres
+                                    </a>
+                                {% else %}
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium">Aucun livre trouvé</p>
+                                    <p class="mt-1 text-xs">Commencez par créer un nouveau livre</p>
+                                    <a href="{{ path('app_livre_new') }}" 
+                                       class="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition">
+                                        Créer un livre
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if livres|length > 0 %}
+    <div class="mt-6 flex justify-between items-center">
+        <p class="text-sm text-gray-700">
+            Total : <span class="font-medium">{{ livres|length }}</span> livre(s)
+        </p>
+        <a href="{{ path('app_livre_new') }}" 
+           class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition">
+            Créer un livre
+        </a>
+    </div>
+    {% endif %}
+{% endblock %}
+

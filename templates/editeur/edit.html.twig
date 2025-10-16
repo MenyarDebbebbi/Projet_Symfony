@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Éditeur{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto">
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Modifier l'éditeur</h1>
+            <p class="mt-2 text-gray-600">Mettez à jour les informations de l'éditeur</p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            {{ include('editeur/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 class="text-sm font-medium text-red-800 mb-2">Zone de danger</h3>
+            {{ include('editeur/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Catégorie{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto">
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Créer une nouvelle catégorie</h1>
+            <p class="mt-2 text-gray-600">Ajoutez une nouvelle catégorie</p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            {{ include('categorie/_form.html.twig', {'button_label': 'Créer'}) }}
+        </div>
+    </div>
+{% endblock %}
+

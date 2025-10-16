@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\OuvrierRepository;
+use App\Repository\EditeurRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OuvrierRepository::class)]
-class Ouvrier
+#[ORM\Entity(repositoryClass: EditeurRepository::class)]
+class Editeur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,13 +17,13 @@ class Ouvrier
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+    private ?string $pays = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $mail = null;
+    private ?string $adresse = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $grade = null;
+    private ?string $telephone = null;
 
     public function getId(): ?int
     {
@@ -42,38 +42,38 @@ class Ouvrier
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getPays(): ?string
     {
-        return $this->prenom;
+        return $this->pays;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPays(string $pays): static
     {
-        $this->prenom = $prenom;
+        $this->pays = $pays;
 
         return $this;
     }
 
-    public function getMail(): ?string
+    public function getAdresse(): ?string
     {
-        return $this->mail;
+        return $this->adresse;
     }
 
-    public function setMail(string $mail): static
+    public function setAdresse(string $adresse): static
     {
-        $this->mail = $mail;
+        $this->adresse = $adresse;
 
         return $this;
     }
 
-    public function getGrade(): ?string
+    public function getTelephone(): ?string
     {
-        return $this->grade;
+        return $this->telephone;
     }
 
-    public function setGrade(string $grade): static
+    public function setTelephone(string $telephone): static
     {
-        $this->grade = $grade; 
+        $this->telephone = $telephone;
 
         return $this;
     }
