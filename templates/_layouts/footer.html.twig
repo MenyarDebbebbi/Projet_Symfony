@@ -1,0 +1,15 @@
+<footer class="bg-white border-t border-gray-200 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-gray-600">© {{ "now"|date("Y") }} Gestion. Tous droits réservés.</p>
+            <div class="flex items-center gap-4 text-sm">
+                <a href="{{ path('app_accueil') }}" class="text-gray-600 hover:text-gray-900">Accueil</a>
+                <a href="{{ path('app_livre_index') }}" class="text-gray-600 hover:text-gray-900">Livres</a>
+                <a href="{{ path('app_categorie_index') }}" class="text-gray-600 hover:text-gray-900">Catégories</a>
+                <a href="{{ path('app_auteur_index') }}" class="text-gray-600 hover:text-gray-900">Auteurs</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
