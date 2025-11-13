@@ -1,0 +1,595 @@
+{# Composants UI réutilisables pour réduire l'utilisation de Tailwind #}
+
+{# Bouton principal #}
+{% macro primary_button(text, href, icon = null, classes = '') %}
+    <a href="{{ href }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 {{ classes }}">
+        {% if icon %}
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ icon }}"/>
+            </svg>
+        {% endif %}
+        {{ text }}
+    </a>
+{% endmacro %}
+
+{# Bouton secondaire #}
+{% macro secondary_button(text, href, classes = '') %}
+    <a href="{{ href }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 {{ classes }}">
+        {{ text }}
+    </a>
+{% endmacro %}
+
+{# Bouton de recherche #}
+{% macro search_button(text = 'Rechercher', classes = '') %}
+    <button type="submit" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 {{ classes }}">
+        {{ text }}
+    </button>
+{% endmacro %}
+
+{# Bouton de réinitialisation #}
+{% macro reset_button(href, text = 'Réinitialiser', classes = '') %}
+    <a href="{{ href }}" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-md transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 {{ classes }}">
+        {{ text }}
+    </a>
+{% endmacro %}
+
+{# Input de recherche #}
+{% macro search_input(name, value, placeholder, classes = '') %}
+    <input 
+        type="text" 
+        id="{{ name }}" 
+        name="{{ name }}" 
+        value="{{ value }}"
+        placeholder="{{ placeholder }}"
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2 border {{ classes }}"
+    >
+{% endmacro %}
+
+{# Select de recherche #}
+{% macro search_select(name, options, selected_value, classes = '') %}
+    <select 
+        id="{{ name }}" 
+        name="{{ name }}"
+        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-4 py-2 border {{ classes }}"
+    >
+        {% for value, label in options %}
+            <option value="{{ value }}" {{ selected_value == value ? 'selected' : '' }}>{{ label }}</option>
+        {% endfor %}
+    </select>
+{% endmacro %}
+
+{# Card de recherche #}
+{% macro search_card(title, content, classes = '') %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6 {{ classes }}">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            {{ title }}
+        </h2>
+        {{ content|raw }}
+    </div>
+{% endmacro %}
+
+{# Tableau principal #}
+{% macro data_table(headers, rows, empty_message, empty_icon, empty_action, classes = '') %}
+    <div class="bg-white rounded-lg shadow overflow-hidden {{ classes }}">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        {% for header in headers %}
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ header }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% if rows|length > 0 %}
+                        {% for row in rows %}
+                            <tr class="hover:bg-gray-50 transition">
+                                {% for cell in row %}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ cell|raw }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="{{ headers|length }}" class="px-6 py-12 text-center">
+                                <div class="text-gray-500">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ empty_icon }}"/>
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium">{{ empty_message }}</p>
+                                    {% if empty_action %}
+                                        {{ empty_action|raw }}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Message de recherche active #}
+{% macro search_summary(search_term, search_type, results_count, classes = '') %}
+    {% if search_term %}
+    <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md {{ classes }}">
+        <p class="text-sm text-blue-800">
+            <span class="font-semibold">Recherche active :</span> 
+            "{{ search_term }}" 
+            {% if search_type and search_type != 'all' %}
+                dans le <span class="font-medium">{{ search_type }}</span>
+            {% else %}
+                dans <span class="font-medium">tous les champs</span>
+            {% endif %}
+            - {{ results_count }} résultat(s) trouvé(s)
+        </p>
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{# Badge de priorité #}
+{% macro priority_badge(priority, classes = '') %}
+    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+        {% if priority == 'Haute' %}bg-red-100 text-red-800
+        {% elseif priority == 'Moyenne' %}bg-yellow-100 text-yellow-800
+        {% else %}bg-green-100 text-green-800
+        {% endif %} {{ classes }}">
+        {{ priority }}
+    </span>
+{% endmacro %}
+
+{# Actions de ligne de tableau #}
+{% macro table_actions(view_path, edit_path, view_id, edit_id, view_text = 'Voir', edit_text = 'Modifier', classes = '') %}
+    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium {{ classes }}">
+        <a href="{{ path(view_path, {'id': view_id}) }}" class="text-indigo-600 hover:text-indigo-900 mr-3 transition">
+            {{ view_text }}
+        </a>
+        <a href="{{ path(edit_path, {'id': edit_id}) }}" class="text-yellow-600 hover:text-yellow-900 transition">
+            {{ edit_text }}
+        </a>
+    </td>
+{% endmacro %}
+
+{# Footer avec actions #}
+{% macro footer_actions(total_count, create_path, create_text, entity_name, classes = '') %}
+    {% if total_count > 0 %}
+    <div class="mt-6 flex justify-between items-center {{ classes }}">
+        <p class="text-sm text-gray-700">
+            Total : <span class="font-medium">{{ total_count }}</span> {{ entity_name }}(s)
+        </p>
+        {{ _self.primary_button(create_text, create_path) }}
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{# Composant de pagination #}
+{% macro pagination(pagination, route_name, route_params = {}) %}
+    {% if pagination.pageCount > 1 %}
+    <div class="mt-6 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+        <div class="flex flex-1 justify-between sm:hidden">
+            {% if pagination.currentPageNumber > 1 %}
+                <a href="{{ path(route_name, route_params|merge({'page': pagination.currentPageNumber - 1})) }}" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Précédent
+                </a>
+            {% else %}
+                <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
+                    Précédent
+                </span>
+            {% endif %}
+            {% if pagination.currentPageNumber < pagination.pageCount %}
+                <a href="{{ path(route_name, route_params|merge({'page': pagination.currentPageNumber + 1})) }}" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Suivant
+                </a>
+            {% else %}
+                <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
+                    Suivant
+                </span>
+            {% endif %}
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+                {% if pagination.totalItemCount > 0 %}
+                <p class="text-sm text-gray-700">
+                    Affichage de <span class="font-medium">{{ pagination.currentPageNumber * pagination.itemNumberPerPage - pagination.itemNumberPerPage + 1 }}</span>
+                    à <span class="font-medium">{{ pagination.currentPageNumber == pagination.pageCount ? pagination.totalItemCount : pagination.currentPageNumber * pagination.itemNumberPerPage }}</span>
+                    sur <span class="font-medium">{{ pagination.totalItemCount }}</span> résultats
+                </p>
+                {% else %}
+                <p class="text-sm text-gray-700">
+                    Aucun résultat
+                </p>
+                {% endif %}
+            </div>
+            <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                    {% if pagination.currentPageNumber > 1 %}
+                        <a href="{{ path(route_name, route_params|merge({'page': pagination.currentPageNumber - 1})) }}" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <span class="sr-only">Précédent</span>
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    {% else %}
+                        <span class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-300 ring-1 ring-inset ring-gray-300 bg-gray-50 cursor-not-allowed">
+                            <span class="sr-only">Précédent</span>
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    {% endif %}
+                    
+                    {% set startPage = max(1, pagination.currentPageNumber - 2) %}
+                    {% set endPage = min(pagination.pageCount, pagination.currentPageNumber + 2) %}
+                    
+                    {% if startPage > 1 %}
+                        <a href="{{ path(route_name, route_params|merge({'page': 1})) }}" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">1</a>
+                        {% if startPage > 2 %}
+                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for page in startPage..endPage %}
+                        {% if page == pagination.currentPageNumber %}
+                            <span aria-current="page" class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ page }}</span>
+                        {% else %}
+                            <a href="{{ path(route_name, route_params|merge({'page': page})) }}" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">{{ page }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if endPage < pagination.pageCount %}
+                        {% if endPage < pagination.pageCount - 1 %}
+                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                        {% endif %}
+                        <a href="{{ path(route_name, route_params|merge({'page': pagination.pageCount})) }}" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">{{ pagination.pageCount }}</a>
+                    {% endif %}
+                    
+                    {% if pagination.currentPageNumber < pagination.pageCount %}
+                        <a href="{{ path(route_name, route_params|merge({'page': pagination.currentPageNumber + 1})) }}" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                            <span class="sr-only">Suivant</span>
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    {% else %}
+                        <span class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-300 ring-1 ring-inset ring-gray-300 bg-gray-50 cursor-not-allowed">
+                            <span class="sr-only">Suivant</span>
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{# Carte de statistique #}
+{% macro stat_card(title, value, color, icon, link_text, link_path, classes = '') %}
+    <div class="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 {{ classes }}">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase">{{ title }}</p>
+                    <p class="mt-2 text-3xl font-bold {{ color }}">{{ value }}</p>
+                </div>
+                <div class="p-3 {{ color|replace({'text-': 'bg-'}) }}100 rounded-full">
+                    <svg class="w-8 h-8 {{ color }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ icon }}"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="{{ link_path }}" class="text-sm font-medium {{ color }} hover:{{ color|replace({'600': '800'}) }} transition">
+                    {{ link_text }} →
+                </a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Section de navigation rapide #}
+{% macro quick_nav_section(title, description, links, gradient_classes, classes = '') %}
+    <div class="{{ gradient_classes }} rounded-lg p-6 text-white shadow-lg {{ classes }}">
+        <h3 class="text-xl font-bold mb-2">{{ title }}</h3>
+        <p class="text-white text-opacity-80 mb-4 text-sm">{{ description }}</p>
+        <div class="space-y-2">
+            {% for link in links %}
+                <a href="{{ link.path }}" class="block bg-white bg-opacity-20 hover:bg-opacity-30 rounded-md px-4 py-2 transition text-sm font-medium">
+                    {{ link.text }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{# Section de navigation en grille #}
+{% macro grid_nav_section(title, description, links, gradient_classes, classes = '') %}
+    <div class="{{ gradient_classes }} rounded-lg p-6 text-white shadow-lg {{ classes }}">
+        <h3 class="text-xl font-bold mb-2">{{ title }}</h3>
+        <p class="text-white text-opacity-80 mb-4 text-sm">{{ description }}</p>
+        <div class="grid grid-cols-2 gap-2">
+            {% for link in links %}
+                <a href="{{ link.path }}" class="block bg-white bg-opacity-20 hover:bg-opacity-30 rounded-md px-3 py-2 transition text-sm font-medium text-center {{ link.span is defined and link.span ? 'col-span-2' : '' }}">
+                    {{ link.text }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{# Tableau de données récentes #}
+{% macro recent_data_table(title, description, headers, rows, view_all_path, classes = '') %}
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden {{ classes }}">
+        <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-indigo-600">
+            <h2 class="text-xl font-bold text-white">{{ title }}</h2>
+            <p class="text-indigo-100 text-sm">{{ description }}</p>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        {% for header in headers %}
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for row in rows %}
+                        <tr class="hover:bg-gray-50 transition">
+                            {% for cell in row %}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ cell|raw }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <a href="{{ view_all_path }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition">
+                Voir tous →
+            </a>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Carte de catégorie avec détails dépliables #}
+{% macro categorie_card(categorie, view_path, classes = '') %}
+    <div class="card-container {{ classes }}" data-card-id="categorie-{{ categorie.id }}">
+        <div class="card-toggle bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer" data-target="details-categorie-{{ categorie.id }}">
+            <div class="p-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-500 uppercase">Catégorie #{{ categorie.id }}</p>
+                        <p class="mt-2 text-xl font-bold text-purple-600">{{ categorie.designation }}</p>
+                    </div>
+                    <div class="p-3 bg-purple-100 rounded-full ml-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-sm font-medium text-purple-600">Voir détails</span>
+                    <svg class="w-5 h-5 text-purple-600 transition-transform transform" data-icon="categorie-{{ categorie.id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div id="details-categorie-{{ categorie.id }}" class="card-details hidden mt-4 bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-purple-500 to-purple-600">
+                <h3 class="text-lg leading-6 font-medium text-white">Détails de la catégorie</h3>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-800">#{{ categorie.id }}</span>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Désignation</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">{{ categorie.designation }}</dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="px-4 py-4 bg-gray-50 border-t border-gray-200">
+                <a href="{{ view_path }}" class="text-sm font-medium text-purple-600 hover:text-purple-800 transition">
+                    Voir la page complète →
+                </a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Carte d'éditeur avec détails dépliables #}
+{% macro editeur_card(editeur, view_path, classes = '') %}
+    <div class="card-container {{ classes }}" data-card-id="editeur-{{ editeur.id }}">
+        <div class="card-toggle bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer" data-target="details-editeur-{{ editeur.id }}">
+            <div class="p-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-500 uppercase">Éditeur #{{ editeur.id }}</p>
+                        <p class="mt-2 text-xl font-bold text-yellow-600">{{ editeur.nom }}</p>
+                        <div class="mt-2 space-y-1">
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">Pays:</span> {{ editeur.pays }}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">Tél:</span> {{ editeur.telephone }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-yellow-100 rounded-full ml-4">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-sm font-medium text-yellow-600">Voir détails</span>
+                    <svg class="w-5 h-5 text-yellow-600 transition-transform transform" data-icon="editeur-{{ editeur.id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div id="details-editeur-{{ editeur.id }}" class="card-details hidden mt-4 bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-yellow-500 to-yellow-600">
+                <h3 class="text-lg leading-6 font-medium text-white">Détails de l'éditeur</h3>
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-800">#{{ editeur.id }}</span>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Nom</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">{{ editeur.nom }}</dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Pays</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">{{ editeur.pays }}</dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Adresse</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ editeur.adresse }}</dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Téléphone</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ editeur.telephone }}</dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="px-4 py-4 bg-gray-50 border-t border-gray-200">
+                <a href="{{ view_path }}" class="text-sm font-medium text-yellow-600 hover:text-yellow-800 transition">
+                    Voir la page complète →
+                </a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Carte de livre avec détails dépliables #}
+{% macro livre_card(livre, view_path, classes = '', priority_badge_html = '') %}
+    {% set image_url = livre.isbn ? 'https://covers.openlibrary.org/b/isbn/' ~ livre.isbn ~ '-M.jpg' : 'https://picsum.photos/seed/livre-' ~ livre.id ~ '/200/300' %}
+    <div class="card-container {{ classes }}" data-card-id="livre-{{ livre.id }}">
+        <div class="card-toggle bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer" data-target="details-livre-{{ livre.id }}">
+            {# Image du livre #}
+            <div class="w-full h-48 bg-gray-200 overflow-hidden">
+                <img 
+                    src="{{ image_url }}" 
+                    alt="Couverture du livre {{ livre.titre }}"
+                    class="w-full h-full object-cover object-center"
+                    onerror="this.onerror=null; this.src='https://picsum.photos/seed/livre-{{ livre.id }}/200/300';"
+                >
+            </div>
+            <div class="p-6">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-500 uppercase">Livre #{{ livre.id }}</p>
+                        <p class="mt-2 text-xl font-bold text-indigo-600">{{ livre.titre }}</p>
+                        <div class="mt-3 space-y-2">
+                            {% if livre.isbn %}
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">ISBN:</span> {{ livre.isbn }}
+                            </p>
+                            {% endif %}
+                            <div class="flex items-center gap-4">
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-medium">Quantité:</span> 
+                                    <span class="text-indigo-600 font-semibold">{{ livre.qte }}</span>
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-medium">Date:</span> {{ livre.datepub|date('d/m/Y') }}
+                                </p>
+                            </div>
+                            {% if priority_badge_html %}
+                            <div class="mt-2">
+                                {{ priority_badge_html|raw }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-sm font-medium text-indigo-600">Voir détails</span>
+                    <svg class="w-5 h-5 text-indigo-600 transition-transform transform" data-icon="livre-{{ livre.id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div id="details-livre-{{ livre.id }}" class="card-details hidden mt-4 bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-500 to-indigo-600">
+                <h3 class="text-lg leading-6 font-medium text-white">Détails du livre</h3>
+            </div>
+            {# Image du livre dans les détails #}
+            <div class="w-full h-64 bg-gray-200 overflow-hidden border-t border-gray-200">
+                <img 
+                    src="{{ image_url }}" 
+                    alt="Couverture du livre {{ livre.titre }}"
+                    class="w-full h-full object-cover object-center"
+                    onerror="this.onerror=null; this.src='https://picsum.photos/seed/livre-{{ livre.id }}/200/300';"
+                >
+            </div>
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-800">#{{ livre.id }}</span>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Titre</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">{{ livre.titre }}</dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">ISBN</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ livre.isbn ?? '-' }}</dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Quantité</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-semibold">{{ livre.qte }}</dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Priorité</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {% if priority_badge_html %}
+                                {{ priority_badge_html|raw }}
+                            {% else %}
+                                {{ _self.priority_badge(livre.priorite) }}
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Date de publication</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ livre.datepub|date('d/m/Y') }}</dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="px-4 py-4 bg-gray-50 border-t border-gray-200">
+                <a href="{{ view_path }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition">
+                    Voir la page complète →
+                </a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

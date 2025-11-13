@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Categorie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 class CategorieRepository extends ServiceEntityRepository
@@ -15,11 +16,19 @@ class CategorieRepository extends ServiceEntityRepository
 
     public function findBySearchCriteria(string $searchTerm, string $searchType = 'all'): array
     {
+        $qb = $this->getSearchQueryBuilder($searchTerm, $searchType);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getSearchQueryBuilder(?string $searchTerm = null, string $searchType = 'all'): QueryBuilder
+    {
         $qb = $this->createQueryBuilder('c');
 
-        $qb->where('c.designation LIKE :term')
-            ->setParameter('term', '%' . $searchTerm . '%');
+        if ($searchTerm) {
+            $qb->where('c.designation LIKE :term')
+                ->setParameter('term', '%' . $searchTerm . '%');
+        }
 
-        return $qb->getQuery()->getResult();
+        return $qb->orderBy('c.id', 'DESC');
     }
 }

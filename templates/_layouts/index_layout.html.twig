@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% import '_components/ui_components.html.twig' as ui %}
+
+{% block title %}{% block index_title %}{% endblock %}{% endblock %}
+
+{% block body %}
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">{% block page_heading %}{% endblock %}</h1>
+        <p class="mt-2 text-gray-600">{% block page_subheading %}{% endblock %}</p>
+    </div>
+
+    {% block search_section %}
+        {% set search_content %}
+            {% block search_form %}{% endblock %}
+            {% block search_summary %}{% endblock %}
+        {% endset %}
+        {{ ui.search_card(block('search_title'), search_content) }}
+    {% endblock %}
+
+    {% block data_table %}
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        {% block table_head %}{% endblock %}
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% block table_body %}{% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block footer_actions %}{% endblock %}
+
+    {% block pagination %}{% endblock %}
+{% endblock %}
+
+
