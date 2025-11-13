@@ -6,6 +6,7 @@ use App\Entity\Livre;
 use App\Form\LivreType;
 use App\Repository\LivreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,19 +16,23 @@ use Symfony\Component\Routing\Attribute\Route;
 final class LivreController extends AbstractController
 {
     #[Route(name: 'app_livre_index', methods: ['GET'])]
-    public function index(Request $request, LivreRepository $livreRepository): Response
+    public function index(Request $request, LivreRepository $livreRepository, PaginatorInterface $paginator): Response
     {
         $searchTerm = $request->query->get('search', '');
         $searchType = $request->query->get('type', 'all');
+        $page = $request->query->getInt('page', 1);
 
-        if ($searchTerm) {
-            $livres = $livreRepository->findBySearchCriteria($searchTerm, $searchType);
-        } else {
-            $livres = $livreRepository->findAll();
-        }
+        $queryBuilder = $livreRepository->getSearchQueryBuilder($searchTerm ?: null, $searchType);
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $page,
+            5 // Nombre d'éléments par page
+        );
 
         return $this->render('livre/index.html.twig', [
-            'livres' => $livres,
+            'pagination' => $pagination,
+            'livres' => $pagination->getItems(),
             'searchTerm' => $searchTerm,
             'searchType' => $searchType,
         ]);

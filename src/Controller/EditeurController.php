@@ -6,6 +6,7 @@ use App\Entity\Editeur;
 use App\Form\EditeurType;
 use App\Repository\EditeurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,24 +15,24 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/editeur')]
 final class EditeurController extends AbstractController
 {
-    public function recherche() {
-
-        
-    }
     #[Route(name: 'app_editeur_index', methods: ['GET'])]
-    public function index(Request $request, EditeurRepository $editeurRepository): Response
+    public function index(Request $request, EditeurRepository $editeurRepository, PaginatorInterface $paginator): Response
     {
         $searchTerm = $request->query->get('search', '');
         $searchType = $request->query->get('type', 'all');
+        $page = $request->query->getInt('page', 1);
 
-        if ($searchTerm) {
-            $editeurs = $editeurRepository->findBySearchCriteria($searchTerm, $searchType);
-        } else {
-            $editeurs = $editeurRepository->findAll();
-        }
+        $queryBuilder = $editeurRepository->getSearchQueryBuilder($searchTerm ?: null, $searchType);
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $page,
+            5 // Nombre d'éléments par page
+        );
 
         return $this->render('editeur/index.html.twig', [
-            'editeurs' => $editeurs,
+            'pagination' => $pagination,
+            'editeurs' => $pagination->getItems(),
             'searchTerm' => $searchTerm,
             'searchType' => $searchType,
         ]);

@@ -16,7 +16,6 @@ final class AccueilController extends AbstractController
     #[Route('/', name: 'app_accueil')]
     #[Route('/accueil', name: 'app_accueil_alt')]
     public function index(
-
         LivreRepository $livreRepo,
         AuteurRepository $auteurRepo,
         CategorieRepository $categorieRepo,
@@ -32,10 +31,14 @@ final class AccueilController extends AbstractController
         ];
 
         $recentLivres = $livreRepo->findBy([], ['id' => 'DESC'], 5);
+        $categories = $categorieRepo->findAll();
+        $editeurs = $editeurRepo->findAll();
 
         return $this->render('accueil/index.html.twig', [
             'stats' => $stats,
             'recentLivres' => $recentLivres,
+            'categories' => $categories,
+            'editeurs' => $editeurs,
         ]);
     }
 }

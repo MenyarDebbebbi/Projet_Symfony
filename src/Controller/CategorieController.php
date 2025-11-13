@@ -6,6 +6,7 @@ use App\Entity\Categorie;
 use App\Form\CategorieType;
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,19 +16,23 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CategorieController extends AbstractController
 {
     #[Route(name: 'app_categorie_index', methods: ['GET'])]
-    public function index(Request $request, CategorieRepository $categorieRepository): Response
+    public function index(Request $request, CategorieRepository $categorieRepository, PaginatorInterface $paginator): Response
     {
         $searchTerm = $request->query->get('search', '');
         $searchType = $request->query->get('type', 'all');
+        $page = $request->query->getInt('page', 1);
 
-        if ($searchTerm) {
-            $categories = $categorieRepository->findBySearchCriteria($searchTerm, $searchType);
-        } else {
-            $categories = $categorieRepository->findAll();
-        }
+        $queryBuilder = $categorieRepository->getSearchQueryBuilder($searchTerm ?: null, $searchType);
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $page,
+            5 // Nombre d'éléments par page
+        );
 
         return $this->render('categorie/index.html.twig', [
-            'categories' => $categories,
+            'pagination' => $pagination,
+            'categories' => $pagination->getItems(),
             'searchTerm' => $searchTerm,
             'searchType' => $searchType,
         ]);
