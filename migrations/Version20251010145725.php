@@ -19,8 +19,8 @@ final class Version20251010145725 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE livre ADD COLUMN isbn VARCHAR(255) NOT NULL');
+        // Cette migration ne fait rien car la colonne isbn a déjà été ajoutée dans Version20251010144830
+        // Migration laissée vide pour maintenir la cohérence de l'historique
     }
 
     public function down(Schema $schema): void

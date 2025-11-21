@@ -1,0 +1,40 @@
+{% extends '_layouts/user_base.html.twig' %}
+
+{% block title %}Catalogue des Livres{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">Catalogue des Livres</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for livre in livres %}
+        <div class="bg-white shadow rounded-lg p-6 hover:shadow-lg transition">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ livre.titre }}</h3>
+            <div class="space-y-2 text-sm text-gray-600 mb-4">
+                {% if livre.auteur %}
+                    <p><span class="font-medium">Auteur:</span> {{ livre.auteur.nom }} {{ livre.auteur.prenom }}</p>
+                {% endif %}
+                {% if livre.categorie %}
+                    <p><span class="font-medium">Catégorie:</span> {{ livre.categorie.designation }}</p>
+                {% endif %}
+                {% if livre.editeur %}
+                    <p><span class="font-medium">Éditeur:</span> {{ livre.editeur.nom }}</p>
+                {% endif %}
+                <p><span class="font-medium">Stock:</span> {{ livre.qte }} exemplaire(s)</p>
+            </div>
+            <div class="flex justify-between items-center">
+                <a href="{{ path('user_livre_show', {id: livre.id}) }}" class="text-indigo-600 hover:text-indigo-800">Voir détails</a>
+                {% if livre.qte > 0 %}
+                    <a href="{{ path('user_commander', {id: livre.id}) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        Commander
+                    </a>
+                {% else %}
+                    <span class="text-gray-400 text-sm">Rupture de stock</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

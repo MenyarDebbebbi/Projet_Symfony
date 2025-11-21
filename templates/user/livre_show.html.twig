@@ -1,0 +1,66 @@
+{% extends '_layouts/user_base.html.twig' %}
+
+{% block title %}{{ livre.titre }}{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white shadow rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ livre.titre }}</h1>
+        
+        <dl class="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-6">
+            {% if livre.isbn %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500">ISBN</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.isbn }}</dd>
+            </div>
+            {% endif %}
+            {% if livre.auteur %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Auteur</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.auteur.nom }} {{ livre.auteur.prenom }}</dd>
+            </div>
+            {% endif %}
+            {% if livre.categorie %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Catégorie</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.categorie.designation }}</dd>
+            </div>
+            {% endif %}
+            {% if livre.editeur %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Éditeur</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.editeur.nom }}</dd>
+            </div>
+            {% endif %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Date de publication</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.datepub|date('d/m/Y') }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Stock disponible</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.qte }} exemplaire(s)</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Priorité</dt>
+                <dd class="mt-1">
+                    <span class="px-2 py-1 text-xs rounded-full {% if livre.priorite == 'Haute' %}bg-red-100 text-red-800{% elseif livre.priorite == 'Moyenne' %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">
+                        {{ livre.priorite }}
+                    </span>
+                </dd>
+            </div>
+        </dl>
+        
+        <div class="flex justify-end space-x-4">
+            <a href="{{ path('user_livres') }}" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Retour</a>
+            {% if livre.qte > 0 %}
+                <a href="{{ path('user_commander', {id: livre.id}) }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    Commander
+                </a>
+            {% else %}
+                <span class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">Rupture de stock</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

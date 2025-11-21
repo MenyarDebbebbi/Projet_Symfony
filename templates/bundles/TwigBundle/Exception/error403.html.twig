@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès refusé - 403</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.8); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        .shake-on-hover:hover {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-red-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-1/2 w-72 h-72 bg-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <div class="max-w-4xl w-full text-center relative z-10">
+        <!-- Main icon with modern design -->
+        <div class="mb-8 flex justify-center">
+            <div class="relative">
+                <div class="absolute inset-0 bg-red-500 rounded-full blur-2xl opacity-30 pulse-glow"></div>
+                <div class="relative bg-gradient-to-br from-red-500 to-orange-500 p-8 rounded-full float-animation">
+                    <svg class="w-32 h-32 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Error code with modern typography -->
+        <div class="mb-6">
+            <h1 class="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-orange-500 to-red-600 mb-2 tracking-tight">
+                403
+            </h1>
+            <div class="h-1 w-32 bg-gradient-to-r from-red-500 to-orange-500 mx-auto rounded-full"></div>
+        </div>
+        
+        <!-- Title and description -->
+        <h2 class="text-4xl font-bold text-gray-800 mb-4">Accès refusé</h2>
+        <p class="text-xl text-gray-600 mb-2 max-w-2xl mx-auto leading-relaxed">
+            {% if exception and exception.message %}
+                {{ exception.message }}
+            {% else %}
+                Vous n'avez pas les permissions nécessaires pour accéder à cette ressource.
+            {% endif %}
+        </p>
+        <p class="text-lg text-gray-500 mb-10">
+            Si vous pensez qu'il s'agit d'une erreur, contactez un administrateur.
+        </p>
+        
+        <!-- Action buttons with modern design -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="{{ path('app_accueil') }}" class="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-xl font-semibold shadow-2xl hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shake-on-hover">
+                <svg class="w-5 h-5 mr-2 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Retour à l'accueil
+                <span class="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-10 transition-opacity"></span>
+            </a>
+            
+            {% if app.user %}
+                <a href="{{ path('dashboard') }}" class="group inline-flex items-center px-8 py-4 bg-white text-red-600 border-2 border-red-500 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:bg-red-50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+                    <svg class="w-5 h-5 mr-2 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+            {% else %}
+                <a href="{{ path('login') }}" class="group inline-flex items-center px-8 py-4 bg-white text-red-600 border-2 border-red-500 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:bg-red-50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+                    <svg class="w-5 h-5 mr-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    Se connecter
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Additional info card -->
+        <div class="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-red-100 max-w-md mx-auto">
+            <div class="flex items-center justify-center mb-3">
+                <svg class="w-6 h-6 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-800">Besoin d'aide ?</h3>
+            </div>
+            <p class="text-sm text-gray-600">
+                Si vous devriez avoir accès à cette page, vérifiez vos permissions ou contactez le support.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
+</body>
+</html>
+

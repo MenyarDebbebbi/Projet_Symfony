@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LivreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -28,6 +30,26 @@ class Livre
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $datepub = null;
+
+    #[ORM\ManyToOne(targetEntity: Bibliotheque::class, inversedBy: 'livres')]
+    private ?Bibliotheque $bibliotheque = null;
+
+    #[ORM\ManyToOne(targetEntity: Auteur::class, inversedBy: 'livres')]
+    private ?Auteur $auteur = null;
+
+    #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'livres')]
+    private ?Categorie $categorie = null;
+
+    #[ORM\ManyToOne(targetEntity: Editeur::class, inversedBy: 'livres')]
+    private ?Editeur $editeur = null;
+
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'livre')]
+    private Collection $commandes;
+
+    public function __construct()
+    {
+        $this->commandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +111,83 @@ class Livre
     public function setDatepub(\DateTimeInterface $datepub): static
     {
         $this->datepub = $datepub;
+
+        return $this;
+    }
+
+    public function getBibliotheque(): ?Bibliotheque
+    {
+        return $this->bibliotheque;
+    }
+
+    public function setBibliotheque(?Bibliotheque $bibliotheque): static
+    {
+        $this->bibliotheque = $bibliotheque;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?Auteur
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?Auteur $auteur): static
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): static
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getEditeur(): ?Editeur
+    {
+        return $this->editeur;
+    }
+
+    public function setEditeur(?Editeur $editeur): static
+    {
+        $this->editeur = $editeur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            if ($commande->getLivre() === $this) {
+                $commande->setLivre(null);
+            }
+        }
 
         return $this;
     }

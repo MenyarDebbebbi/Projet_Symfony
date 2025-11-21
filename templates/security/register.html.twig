@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - Administration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Créer un compte
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Ou <a href="{{ path('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">connectez-vous</a> si vous avez déjà un compte
+            </p>
+        </div>
+
+        {% for flash_error in app.flashes('success') %}
+            <div class="rounded-md bg-green-50 p-4">
+                <div class="flex">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-green-800">
+                            {{ flash_error }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {{ form_start(registrationForm, {'attr': {'class': 'mt-8 space-y-6'}}) }}
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label for="{{ registrationForm.email.vars.id }}" class="sr-only">Email</label>
+                    {{ form_widget(registrationForm.email, {'attr': {'class': 'appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm', 'placeholder': 'Adresse email'}}) }}
+                    {% if registrationForm.email.vars.errors|length > 0 %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form_errors(registrationForm.email) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ registrationForm.plainPassword.first.vars.id }}" class="sr-only">Mot de passe</label>
+                    {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm', 'placeholder': 'Mot de passe'}}) }}
+                    {% if registrationForm.plainPassword.first.vars.errors|length > 0 %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ registrationForm.plainPassword.second.vars.id }}" class="sr-only">Confirmer le mot de passe</label>
+                    {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm', 'placeholder': 'Confirmer le mot de passe'}}) }}
+                    {% if registrationForm.plainPassword.second.vars.errors|length > 0 %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if not registrationForm.vars.valid %}
+                <div class="rounded-md bg-red-50 p-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                Erreurs de validation
+                            </h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                {{ form_errors(registrationForm) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div>
+                <button 
+                    type="submit" 
+                    class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    S'inscrire
+                </button>
+            </div>
+        {{ form_end(registrationForm) }}
+    </div>
+</div>
+</body>
+</html>
+

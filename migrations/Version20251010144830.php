@@ -19,8 +19,22 @@ final class Version20251010144830 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE livre ADD COLUMN isbn VARCHAR(255) DEFAULT NULL');
+        // Ajout de la colonne isbn à la table livre
+        // Vérification pour éviter les doublons (pour SQLite)
+        $connection = $this->connection;
+        $sm = $connection->createSchemaManager();
+        $columns = $sm->listTableColumns('livre');
+        $hasIsbn = false;
+        foreach ($columns as $column) {
+            if ($column->getName() === 'isbn') {
+                $hasIsbn = true;
+                break;
+            }
+        }
+
+        if (!$hasIsbn) {
+            $this->addSql('ALTER TABLE livre ADD COLUMN isbn VARCHAR(255) DEFAULT NULL');
+        }
     }
 
     public function down(Schema $schema): void

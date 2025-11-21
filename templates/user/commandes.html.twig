@@ -1,0 +1,48 @@
+{% extends '_layouts/user_base.html.twig' %}
+
+{% block title %}Mes Commandes{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">Mes Commandes</h1>
+    
+    {% if commandes|length > 0 %}
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Livre</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantité</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for commande in commandes %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ commande.livre.titre }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ commande.quantite }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ commande.dateCommande|date('d/m/Y H:i') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs rounded-full {% if commande.statut == 'confirmee' %}bg-green-100 text-green-800{% elseif commande.statut == 'annulee' %}bg-red-100 text-red-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                            {{ commande.statut|replace({'_': ' '})|title }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a href="{{ path('user_commande_show', {id: commande.id}) }}" class="text-indigo-600 hover:text-indigo-900">Voir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="bg-white shadow rounded-lg p-12 text-center">
+        <p class="text-gray-500 mb-4">Aucune commande pour le moment.</p>
+        <a href="{{ path('user_livres') }}" class="text-indigo-600 hover:text-indigo-800">Parcourir les livres</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

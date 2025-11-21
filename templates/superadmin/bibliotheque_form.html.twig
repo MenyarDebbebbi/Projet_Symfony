@@ -1,0 +1,20 @@
+{% extends 'superadmin_base.html.twig' %}
+
+{% block title %}{{ bibliotheque.id ? 'Modifier' : 'Nouvelle' }} Bibliothèque{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ bibliotheque.id ? 'Modifier' : 'Nouvelle' }} Bibliothèque</h1>
+    
+    <div class="bg-white shadow rounded-lg p-6">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="flex justify-end space-x-4 mt-6">
+            <a href="{{ path('superadmin_bibliotheques') }}" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Annuler</a>
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Enregistrer</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+

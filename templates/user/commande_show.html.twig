@@ -1,0 +1,39 @@
+{% extends '_layouts/user_base.html.twig' %}
+
+{% block title %}Commande #{{ commande.id }}{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white shadow rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Commande #{{ commande.id }}</h1>
+        
+        <dl class="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-6">
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Livre</dt>
+                <dd class="mt-1 text-sm font-semibold text-gray-900">{{ commande.livre.titre }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Quantité</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ commande.quantite }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Date de commande</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ commande.dateCommande|date('d/m/Y H:i') }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Statut</dt>
+                <dd class="mt-1">
+                    <span class="px-2 py-1 text-xs rounded-full {% if commande.statut == 'confirmee' %}bg-green-100 text-green-800{% elseif commande.statut == 'annulee' %}bg-red-100 text-red-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                        {{ commande.statut|replace({'_': ' '})|title }}
+                    </span>
+                </dd>
+            </div>
+        </dl>
+        
+        <div class="flex justify-end">
+            <a href="{{ path('user_commandes') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Retour</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

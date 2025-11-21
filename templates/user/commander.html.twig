@@ -1,0 +1,24 @@
+{% extends '_layouts/user_base.html.twig' %}
+
+{% block title %}Commander - {{ livre.titre }}{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Commander: {{ livre.titre }}</h1>
+    
+    <div class="bg-white shadow rounded-lg p-6">
+        <div class="mb-6">
+            <p class="text-sm text-gray-600">Stock disponible: <span class="font-semibold">{{ livre.qte }} exemplaire(s)</span></p>
+        </div>
+        
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="flex justify-end space-x-4 mt-6">
+            <a href="{{ path('user_livre_show', {id: livre.id}) }}" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Annuler</a>
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Commander</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+

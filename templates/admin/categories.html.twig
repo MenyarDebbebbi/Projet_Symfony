@@ -1,0 +1,41 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Gestion des Catégories{% endblock %}
+
+{% block body %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-900">Gestion des Catégories</h1>
+        <a href="{{ path('admin_categorie_new') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+            Nouvelle Catégorie
+        </a>
+    </div>
+    
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Désignation</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for categorie in categories %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ categorie.id }}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ categorie.designation }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a href="{{ path('admin_categorie_edit', {id: categorie.id}) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
+                        <form method="post" action="{{ path('admin_categorie_delete', {id: categorie.id}) }}" class="inline" onsubmit="return confirm('Êtes-vous sûr ?');">
+                            <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

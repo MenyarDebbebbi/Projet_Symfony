@@ -1,0 +1,27 @@
+easy_admin:
+    # Configuration du site
+    site_name: 'Administration'
+    
+    # Configuration de l'authentification
+    # EasyAdmin utilisera automatiquement le firewall Symfony configuré
+    # Assurez-vous que votre firewall protège les routes /admin
+    
+    # Configuration des formats de date
+    formats:
+        date: 'd/m/Y'
+        time: 'H:i'
+        datetime: 'd/m/Y H:i'
+    
+    # Configuration des actions par défaut
+    disabled_actions: []
+    
+    # Configuration de la pagination
+    list:
+        max_results: 20
+    
+    # Configuration des assets
+    design:
+        brand_color: '#1a1a1a'
+        menu:
+            collapsed: false
+
