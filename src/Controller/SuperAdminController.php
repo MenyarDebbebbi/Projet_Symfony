@@ -174,7 +174,17 @@ class SuperAdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Créer la bibliothèque
             $entityManager->persist($bibliotheque);
+
+            // Récupérer l'admin sélectionné (champ non mappé)
+            /** @var User|null $admin */
+            $admin = $form->get('admin')->getData();
+            if ($admin instanceof User) {
+                $admin->setBibliotheque($bibliotheque);
+                $entityManager->persist($admin);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Bibliothèque créée avec succès');
@@ -197,6 +207,15 @@ class SuperAdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Mettre à jour la bibliothèque
+            // Gérer l'assignation éventuelle à un admin
+            /** @var User|null $admin */
+            $admin = $form->get('admin')->getData();
+            if ($admin instanceof User) {
+                $admin->setBibliotheque($bibliotheque);
+                $entityManager->persist($admin);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Bibliothèque modifiée avec succès');

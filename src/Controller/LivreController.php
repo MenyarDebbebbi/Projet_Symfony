@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Livre;
+use App\Entity\User;
 use App\Form\LivreType;
 use App\Repository\LivreRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,6 +49,13 @@ final class LivreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si aucune bibliothèque n'est renseignée, on rattache automatiquement
+            // le livre à la bibliothèque de l'admin connecté (si elle existe).
+            $user = $this->getUser();
+            if ($user instanceof User && $livre->getBibliotheque() === null && $user->getBibliotheque() !== null) {
+                $livre->setBibliotheque($user->getBibliotheque());
+            }
+
             $entityManager->persist($livre);
             $entityManager->flush();
 
