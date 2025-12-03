@@ -7,19 +7,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/profil')]
+#[Route('/help')]
 #[IsGranted('ROLE_USER')]
-class ProfileController extends AbstractController
+class HelpController extends AbstractController
 {
-    #[Route('', name: 'app_profil')]
+    #[Route('', name: 'app_help')]
     public function index(): Response
     {
         $user = $this->getUser();
 
-        // Sélectionner le layout en fonction du rôle
-        // - Utilisateur normal : templates/_layouts/user_base.html.twig
-        // - Admin : templates/admin_base.html.twig
-        // - Super admin : templates/superadmin_base.html.twig
+        // Layout en fonction du rôle (même logique que pour le profil)
         $baseLayout = '_layouts/user_base.html.twig';
 
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
@@ -28,7 +25,7 @@ class ProfileController extends AbstractController
             $baseLayout = 'admin_base.html.twig';
         }
 
-        return $this->render('profil/index.html.twig', [
+        return $this->render('help/index.html.twig', [
             'user' => $user,
             'base_layout' => $baseLayout,
         ]);
