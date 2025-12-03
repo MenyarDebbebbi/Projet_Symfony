@@ -54,4 +54,22 @@ class LivreRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Retourne un livre par son ID avec ses relations chargées en jointure,
+     * ce qui évite les erreurs "Entity of type X with id Y was not found"
+     * sur des associations orphelines.
+     */
+    public function findOneWithRelations(int $id): ?Livre
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.auteur', 'a')->addSelect('a')
+            ->leftJoin('l.categorie', 'c')->addSelect('c')
+            ->leftJoin('l.editeur', 'e')->addSelect('e')
+            ->leftJoin('l.bibliotheque', 'b')->addSelect('b')
+            ->where('l.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

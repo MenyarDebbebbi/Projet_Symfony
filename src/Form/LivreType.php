@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class LivreType extends AbstractType
 {
@@ -65,6 +66,14 @@ class LivreType extends AbstractType
                 'choice_label' => 'nom',
                 'label' => 'Éditeur',
                 'required' => false
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'label' => 'Image du livre',
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => false,
+                'image_uri' => true,
+                'asset_helper' => true,
             ])
         ;
     }

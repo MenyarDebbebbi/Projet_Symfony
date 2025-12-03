@@ -37,7 +37,8 @@ class UserController extends AbstractController
     #[Route('/livres', name: 'user_livres')]
     public function livres(LivreRepository $livreRepository): Response
     {
-        $livres = $livreRepository->findAll();
+        // Utilise une requête avec jointures pour éviter les entités orphelines
+        $livres = $livreRepository->findAllWithRelations();
 
         return $this->render('user/livres.html.twig', [
             'livres' => $livres,
@@ -45,8 +46,14 @@ class UserController extends AbstractController
     }
 
     #[Route('/livres/{id}', name: 'user_livre_show')]
-    public function showLivre(Livre $livre): Response
+    public function showLivre(int $id, LivreRepository $livreRepository): Response
     {
+        $livre = $livreRepository->findOneWithRelations($id);
+        
+        if (!$livre) {
+            throw $this->createNotFoundException('Livre non trouvé');
+        }
+
         return $this->render('user/livre_show.html.twig', [
             'livre' => $livre,
         ]);
@@ -54,10 +61,17 @@ class UserController extends AbstractController
 
     #[Route('/livres/{id}/commander', name: 'user_commander')]
     public function commander(
-        Livre $livre,
+        int $id,
         Request $request,
+        LivreRepository $livreRepository,
         EntityManagerInterface $entityManager
     ): Response {
+        $livre = $livreRepository->findOneWithRelations($id);
+        
+        if (!$livre) {
+            throw $this->createNotFoundException('Livre non trouvé');
+        }
+        
         $user = $this->getUser();
 
         $commande = new Commande();

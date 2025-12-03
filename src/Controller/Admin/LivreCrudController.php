@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
@@ -25,6 +26,10 @@ class LivreCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('titre'),
+            ImageField::new('imageName')
+                ->setLabel('Image')
+                ->setBasePath('/uploads/livres')
+                ->hideOnForm(),
             IntegerField::new('qte')->setLabel('Quantité'),
             TextField::new('priorite')->setLabel('Priorité'),
             TextField::new('isbn')->setLabel('ISBN'),
