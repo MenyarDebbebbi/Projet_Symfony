@@ -39,4 +39,19 @@ class LivreRepository extends ServiceEntityRepository
 
         return $qb->orderBy('l.id', 'DESC');
     }
+
+    /**
+     * Retourne tous les livres avec leurs relations chargées en jointure,
+     * ce qui évite les erreurs "Entity of type X with id Y was not found"
+     * sur des associations orphelines.
+     */
+    public function findAllWithRelations(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.auteur', 'a')->addSelect('a')
+            ->leftJoin('l.categorie', 'c')->addSelect('c')
+            ->leftJoin('l.editeur', 'e')->addSelect('e')
+            ->getQuery()
+            ->getResult();
+    }
 }

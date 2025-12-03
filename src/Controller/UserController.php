@@ -25,7 +25,8 @@ class UserController extends AbstractController
     ): Response {
         $user = $this->getUser();
         $commandes = $commandeRepository->findByUser($user);
-        $livres = $livreRepository->findAll();
+        // Utilise une requête avec jointures pour éviter les entités orphelines (catégorie supprimée, etc.)
+        $livres = $livreRepository->findAllWithRelations();
 
         return $this->render('user/dashboard.html.twig', [
             'commandes' => $commandes,
