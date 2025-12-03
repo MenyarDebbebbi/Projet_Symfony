@@ -45,6 +45,12 @@
                 <dd class="mt-1 text-sm text-gray-900">{{ livre.editeur.nom }}</dd>
             </div>
             {% endif %}
+            {% if livre.bibliotheque %}
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Bibliothèque</dt>
+                <dd class="mt-1 text-sm text-gray-900">{{ livre.bibliotheque.nom }}</dd>
+            </div>
+            {% endif %}
             <div>
                 <dt class="text-sm font-medium text-gray-500">Date de publication</dt>
                 <dd class="mt-1 text-sm text-gray-900">{{ livre.datepub|date('d/m/Y') }}</dd>

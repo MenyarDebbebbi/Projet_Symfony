@@ -7,6 +7,8 @@ use App\Entity\Livre;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use App\Repository\LivreRepository;
+use App\Repository\BibliothequeRepository;
+use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,28 +22,60 @@ class UserController extends AbstractController
 {
     #[Route('/dashboard', name: 'user_dashboard')]
     public function dashboard(
+        Request $request,
         CommandeRepository $commandeRepository,
-        LivreRepository $livreRepository
+        LivreRepository $livreRepository,
+        BibliothequeRepository $bibliothequeRepository,
+        CategorieRepository $categorieRepository
     ): Response {
         $user = $this->getUser();
         $commandes = $commandeRepository->findByUser($user);
-        // Utilise une requête avec jointures pour éviter les entités orphelines (catégorie supprimée, etc.)
-        $livres = $livreRepository->findAllWithRelations();
+        
+        // Récupérer les paramètres de filtre
+        $bibliothequeId = $request->query->getInt('bibliotheque', 0) ?: null;
+        $categorieId = $request->query->getInt('categorie', 0) ?: null;
+
+        // Récupérer les livres filtrés
+        $livres = $livreRepository->findFiltered($bibliothequeId, $categorieId);
+
+        // Récupérer toutes les bibliothèques et catégories pour les filtres
+        $bibliotheques = $bibliothequeRepository->findAll();
+        $categories = $categorieRepository->findAll();
 
         return $this->render('user/dashboard.html.twig', [
             'commandes' => $commandes,
             'livres' => $livres,
+            'bibliotheques' => $bibliotheques,
+            'categories' => $categories,
+            'selectedBibliotheque' => $bibliothequeId,
+            'selectedCategorie' => $categorieId,
         ]);
     }
 
     #[Route('/livres', name: 'user_livres')]
-    public function livres(LivreRepository $livreRepository): Response
-    {
-        // Utilise une requête avec jointures pour éviter les entités orphelines
-        $livres = $livreRepository->findAllWithRelations();
+    public function livres(
+        Request $request,
+        LivreRepository $livreRepository,
+        BibliothequeRepository $bibliothequeRepository,
+        CategorieRepository $categorieRepository
+    ): Response {
+        // Récupérer les paramètres de filtre
+        $bibliothequeId = $request->query->getInt('bibliotheque', 0) ?: null;
+        $categorieId = $request->query->getInt('categorie', 0) ?: null;
+
+        // Récupérer les livres filtrés
+        $livres = $livreRepository->findFiltered($bibliothequeId, $categorieId);
+
+        // Récupérer toutes les bibliothèques et catégories pour les filtres
+        $bibliotheques = $bibliothequeRepository->findAll();
+        $categories = $categorieRepository->findAll();
 
         return $this->render('user/livres.html.twig', [
             'livres' => $livres,
+            'bibliotheques' => $bibliotheques,
+            'categories' => $categories,
+            'selectedBibliotheque' => $bibliothequeId,
+            'selectedCategorie' => $categorieId,
         ]);
     }
 

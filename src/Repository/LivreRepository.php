@@ -51,6 +51,33 @@ class LivreRepository extends ServiceEntityRepository
             ->leftJoin('l.auteur', 'a')->addSelect('a')
             ->leftJoin('l.categorie', 'c')->addSelect('c')
             ->leftJoin('l.editeur', 'e')->addSelect('e')
+            ->leftJoin('l.bibliotheque', 'b')->addSelect('b')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Retourne les livres filtrés par bibliothèque et/ou catégorie
+     */
+    public function findFiltered(?int $bibliothequeId = null, ?int $categorieId = null): array
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->leftJoin('l.auteur', 'a')->addSelect('a')
+            ->leftJoin('l.categorie', 'c')->addSelect('c')
+            ->leftJoin('l.editeur', 'e')->addSelect('e')
+            ->leftJoin('l.bibliotheque', 'b')->addSelect('b');
+
+        if ($bibliothequeId !== null) {
+            $qb->andWhere('l.bibliotheque = :bibliothequeId')
+                ->setParameter('bibliothequeId', $bibliothequeId);
+        }
+
+        if ($categorieId !== null) {
+            $qb->andWhere('l.categorie = :categorieId')
+                ->setParameter('categorieId', $categorieId);
+        }
+
+        return $qb->orderBy('l.titre', 'ASC')
             ->getQuery()
             ->getResult();
     }
