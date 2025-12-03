@@ -35,6 +35,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: ^/profil, roles: ROLE_USER }
         # Routes d'administration - réservées aux admins uniquement
         - { path: ^/livre, roles: ROLE_ADMIN }
         - { path: ^/auteur, roles: ROLE_ADMIN }

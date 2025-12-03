@@ -13,8 +13,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AccueilController extends AbstractController
 {
-    #[Route('/', name: 'app_accueil')]
-    #[Route('/accueil', name: 'app_accueil_alt')]
+    #[Route('/', name: 'app_home')]
+    public function home(): Response
+    {
+        // Rediriger la page d'accueil vers la page de connexion
+        return $this->redirectToRoute('login');
+    }
+
+    #[Route('/accueil', name: 'app_accueil')]
     public function index(
         LivreRepository $livreRepo,
         AuteurRepository $auteurRepo,
