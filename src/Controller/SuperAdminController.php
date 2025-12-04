@@ -26,7 +26,7 @@ class SuperAdminController extends AbstractController
         BibliothequeRepository $bibliothequeRepository
     ): Response {
         $totalUsers = $userRepository->count([]);
-        $totalAdmins = $userRepository->count(['roles' => ['ROLE_ADMIN']]);
+        $totalAdmins = $userRepository->countByRole('ROLE_ADMIN');
         $totalBibliotheques = $bibliothequeRepository->count([]);
 
         return $this->render('superadmin/dashboard.html.twig', [
